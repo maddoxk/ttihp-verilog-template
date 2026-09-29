@@ -1,56 +1,59 @@
 # Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
-  discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
-  language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
+  title:        "ProtocolForge ASIC"
+  author:       "Maddox & Team"
+  discord:      ""
+  description:  "High-performance programmable protocol emulator with hardware SBE, BSU, streaming CRC, auto-baud, and deadline scheduling"
+  language:     "Verilog"
+  clock_hz:     50000000
 
-  # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  # Jane Street Protocol Emulator ASIC Competition allocation
+  tiles: "6x4"
 
-  # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "tt_um_example"
+  # Top module name
+  top_module:  "tt_um_maddox_protocolforge"
 
-  # List your project's source files here.
-  # Source files must be in ./src and you must list each source file separately, one per line.
-  # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
+  # Project source files
   source_files:
     - "project.v"
+    - "forge_core.v"
+    - "forge_fifo.v"
+    - "forge_crc.v"
+    - "forge_sbe_bsu.v"
+    - "forge_abu.v"
+    - "forge_spi.v"
 
-# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
-# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
+# Pinout of ProtocolForge
 pinout:
-  # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
+  # Dedicated Inputs (GPIO 0..7)
+  ui[0]: "GPIO0 (IN / Auto-Baud Sense)"
+  ui[1]: "GPIO1 (IN)"
+  ui[2]: "GPIO2 (IN)"
+  ui[3]: "GPIO3 (IN)"
+  ui[4]: "GPIO4 (IN)"
+  ui[5]: "GPIO5 (IN)"
+  ui[6]: "GPIO6 (IN)"
+  ui[7]: "GPIO7 (IN)"
 
-  # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  # Dedicated Outputs (GPIO 8..15)
+  uo[0]: "GPIO8 (OUT)"
+  uo[1]: "GPIO9 (OUT)"
+  uo[2]: "GPIO10 (OUT)"
+  uo[3]: "GPIO11 (OUT)"
+  uo[4]: "GPIO12 (OUT)"
+  uo[5]: "GPIO13 (OUT)"
+  uo[6]: "GPIO14 (OUT)"
+  uo[7]: "GPIO15 (OUT)"
 
-  # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
+  # Bidirectional pins (GPIO 16..19 + Host SPI Slave)
+  uio[0]: "GPIO16 (BIDIR / Open-Drain)"
+  uio[1]: "GPIO17 (BIDIR / Open-Drain)"
+  uio[2]: "GPIO18 (BIDIR / Open-Drain)"
+  uio[3]: "GPIO19 (BIDIR / Open-Drain)"
+  uio[4]: "HOST_CS_N (Host SPI Slave Select)"
+  uio[5]: "HOST_SCK (Host SPI Clock max 12.5MHz)"
+  uio[6]: "HOST_MOSI (Host SPI Data In)"
+  uio[7]: "HOST_MISO (Host SPI Data Out & Telemetry)"
 
 # Do not change!
 yaml_version: 6

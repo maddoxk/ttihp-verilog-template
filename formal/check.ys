@@ -1,0 +1,41 @@
+# =============================================================================
+# ProtocolForge Formal Verification Script (Yosys SAT / BMC Engine)
+# Usage: yosys -s formal/check.ys
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Check forge_fifo_formal: No underflow, no overflow, FIFO ordering preserved
+# -----------------------------------------------------------------------------
+log "=== Formal Verification: forge_fifo_formal ==="
+read_verilog -formal -I src src/forge_fifo.v formal/forge_formal.v
+prep -top forge_fifo_formal -flatten
+memory_map
+opt -fast
+async2sync
+sat -seq 24 -prove-asserts -set-init-zero -set-at 1 rst_n 0 -set-assumes -verify forge_fifo_formal
+
+# -----------------------------------------------------------------------------
+# 2. Check forge_sbe_bsu_formal: CAN <= 5 identical bits, USB <= 6 ones
+# -----------------------------------------------------------------------------
+log "=== Formal Verification: forge_sbe_bsu_formal ==="
+design -reset
+read_verilog -formal -I src src/forge_sbe_bsu.v formal/forge_formal.v
+prep -top forge_sbe_bsu_formal -flatten
+memory_map
+opt -fast
+async2sync
+sat -seq 32 -prove-asserts -set-init-zero -set-at 1 rst_n 0 -set-assumes -verify forge_sbe_bsu_formal
+
+# -----------------------------------------------------------------------------
+# 3. Check forge_scheduler_formal: Deadline Scheduler Wrap-Around Safety
+# -----------------------------------------------------------------------------
+log "=== Formal Verification: forge_scheduler_formal ==="
+design -reset
+read_verilog -formal -I src formal/forge_formal.v
+prep -top forge_scheduler_formal -flatten
+memory_map
+opt -fast
+async2sync
+sat -seq 32 -prove-asserts -set-init-zero -set-at 1 rst_n 0 -set-assumes -verify forge_scheduler_formal
+
+log "=== ALL FORMAL PROOFS PASSED WITH ZERO VIOLATIONS! ==="
